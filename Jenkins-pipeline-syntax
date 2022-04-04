@@ -1,0 +1,42 @@
+This content will explain briefly the Jenkins pipeline syntax used for defining JenkinsFile on my .mdfile on Github.
+
+Pipeline {										                    1
+agent any										                      2
+
+tools {											                      3
+maven ‘Maven3’
+}
+stages {
+stage (‘Build’) {									                4
+steps {														
+sh ‘mvn clean install -f MyWebapp/pom.xml’				5
+}
+}
+stage (‘Jacoco’) {									              6
+steps {	
+jacoco()
+}
+}
+stage (‘Dev Deploy’) {								            7
+steps {	
+echo “deploying to DEV Env”							          8
+deploy adapters: [tomcat9(credentialsId: '7177fb7b-3b26-46b8-ae25-adaf5df8d1a5', path: '', url: 'http://ec2-13-58-177-101.us-east-2.compute.amazonaws.com:8080')], contextPath: null, war: '**/*.war'	
+}                                                 9
+}
+}
+}
+
+
+1) Pipeline: A declarative pipeline-specific syntax was used and it defines block containing all content and instructions for executing the entire pipeline.
+2) Agent: A declarative pipeline-specific syntax that instructs Jenkins to allocate an executor and work space for the entire Pipeline.
+3) Maven3: A build tool that I used to build java
+4) Stage: MyWebapp which is my project is being built in this stage
+5) Steps: I installed Maven with a pom.xml file used to declare all dependencies and plugins
+6) Stage: Jacoco plugin was added for integration
+7) Stage: Dev will be deployed to its environment
+8) Deploying app to Dev Environment . 
+9) Apache Tomcat was implemented to provide a pure java web server environment in which Mywebapp can run.
+
+
+Akindele Mary
+akindelemf@gmail.com
